@@ -17,6 +17,10 @@ func main() {
 
 	auth.POST("/start", handlers.StartProcessing)
 	auth.POST("/stop", handlers.StopProcessing)
+	auth.GET("/results", handlers.GetResults)
+	auth.GET("/detail/*url", handlers.GetDetail)
+	auth.DELETE("/delete", handlers.DeleteURLs)
+	auth.GET("/crawl-stats", handlers.GetCrawlStats)
 
 	router.Run(":8080")
 }

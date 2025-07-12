@@ -95,6 +95,31 @@ func StartProcessing(c *gin.Context) {
 	}
 }
 
+// GET /results - Fetch all processed results
+func GetResults(c *gin.Context) {
+	var results []models.ProcessResult
+	if err := database.DB.Find(&results).Error; err != nil {
+		utils.JSONError(c, http.StatusInternalServerError, "Failed to fetch results")
+		return
+	}
+
+	c.JSON(http.StatusOK, results)
+}
+
+// GET /detail/:url - Fetch detailed result for a specific URL
+func GetDetail(c *gin.Context) {
+	rawURL := c.Param("url")
+	url := strings.TrimPrefix(rawURL, "/")
+
+	var detail models.ProcessResult
+	if err := database.DB.Where("url = ?", url).First(&detail).Error; err != nil {
+		utils.JSONError(c, http.StatusNotFound, "Detail not found for URL")
+		return
+	}
+
+	c.JSON(http.StatusOK, detail)
+}
+
 // POST /stop - Delete a result by URL
 func StopProcessing(c *gin.Context) {
 	var request models.ProcessRequest
@@ -109,4 +134,41 @@ func StopProcessing(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Processing stopped for URL: " + request.URL})
+}
+
+// DELETE /delete - Bulk delete URLs
+type DeleteRequest struct {
+	URLs []string `json:"urls"`
+}
+
+func DeleteURLs(c *gin.Context) {
+	var req DeleteRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		utils.JSONError(c, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	if err := database.DB.Where("url IN (?)", req.URLs).Delete(&models.ProcessResult{}).Error; err != nil {
+		utils.JSONError(c, http.StatusInternalServerError, "Failed to delete URLs")
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"deleted": req.URLs})
+}
+
+// GET /crawl-stats - Return statistics for all processing statuses
+func GetCrawlStats(c *gin.Context) {
+	var queued, running, done, errorCount int64
+
+	database.DB.Model(&models.ProcessResult{}).Where("status = ?", "queued").Count(&queued)
+	database.DB.Model(&models.ProcessResult{}).Where("status = ?", "running").Count(&running)
+	database.DB.Model(&models.ProcessResult{}).Where("status = ?", "done").Count(&done)
+	database.DB.Model(&models.ProcessResult{}).Where("status = ?", "error").Count(&errorCount)
+
+	c.JSON(http.StatusOK, gin.H{
+		"queued":  queued,
+		"running": running,
+		"done":    done,
+		"error":   errorCount,
+	})
 }
