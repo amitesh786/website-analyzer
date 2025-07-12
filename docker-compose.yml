@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: http://localhost:8080
+        REACT_APP_AUTH_TOKEN: secure-token
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_USER=root
+      - DB_PASSWORD=786@Kamal
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=sykell_db
+      - AUTH_TOKEN=secure-token
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 786@Kamal
+      MYSQL_DATABASE: sykell_db
+      MYSQL_USER: sykell_user
+      MYSQL_PASSWORD: 786@Kamal
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:

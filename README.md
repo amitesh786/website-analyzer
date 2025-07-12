@@ -57,6 +57,7 @@ A full-stack web application that analyzes webpages for structure, broken links,
 - **Database**: MySQL
 
 ### Dev & Deployment
+- **Containerization**: Docker, Docker Compose
 - **CI/Testing Tools**: Babel, Jest, ts-node
 - **Linting**: ESLint + Prettier
 
@@ -127,9 +128,24 @@ Create `.env` files if needed:
 
 ### Running the Application
 
-* You can run the application based on your development or deployment preference:
+* You can run the application using two different approaches based on your development or deployment preference:
 
-* Run Frontend and Backend Separately (Recommended for Development)
+    - Option 1: Dockerized Setup (Recommended for Production or Quick Start)
+    
+        - Run both frontend and backend using a single Docker command:
+            ```sh
+            docker-compose up --build
+            ```
+            This will:
+                Spin up both services (frontend and backend)
+                Handle environment variables and dependencies
+                Run everything in isolated containers
+        - Access:
+            Frontend: `http://localhost:3000`
+            Backend: `http://localhost:8080`
+        **Note: Ideal for quick testing, deployment, or avoiding local setup issues.**
+
+* Option 2: Run Frontend and Backend Separately (Recommended for Development)
 
     - You can also run the frontend and backend manually, giving you more flexibility during development.
 
