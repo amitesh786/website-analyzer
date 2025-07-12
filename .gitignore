@@ -1,0 +1,29 @@
+# Logs
+*.log
+
+# Dependency directories (should only exist locally or in CI)
+node_modules/
+vendor/
+
+# Build directories
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS/IDE-specific files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Docker
+*.pid
+*.pid.lock
+
+# Others
+*.bak
+*.swp
