@@ -35,8 +35,8 @@ A full-stack web application that analyzes webpages for structure, broken links,
 
 ### Frontend
 - **Framework**: React 18 (with React Router DOM 6)
-- **Language**: TypeScript 4.9
-- **UI Library**: Ant Design 5
+- **Language**: TypeScript
+- **UI Library**: Ant Design
 - **Charting**: Highcharts with `highcharts-react-official` support
 - **HTTP Client**: Axios
 - **Search/Filtering**: Fuse.js (for fuzzy searching)
@@ -72,8 +72,8 @@ A full-stack web application that analyzes webpages for structure, broken links,
 1. **Clone the repository**
 
     ```sh
-    git clone https://github.com/amitesh786/website-url-analyzer.git
-    cd website-url-analyzer
+    git clone https://github.com/amitesh786/website-analyzer.git
+    cd website-analyzer
     ```
 2. **Backend Setup (Golang)**
 
@@ -171,7 +171,7 @@ Create `.env` files if needed:
         Navigate to `http://localhost:3000` in your web browser to use the application.
 
 ## Project Structure
--    website-url-analyzer/
+-    website-analyzer/
 -    ├── backend/
 -    │   ├── main.go
 -    │   ├── database/
