@@ -144,5 +144,21 @@ func countLinks(doc *goquery.Document, pageURL string) (int, int, []models.Broke
 // checkLoginForm checks if the page contains any password input field,
 // which typically indicates the presence of a login form.
 func checkLoginForm(doc *goquery.Document) bool {
-	return doc.Find("input[type='password']").Length() > 0
+	// Typical password field
+	if doc.Find("input[type='password']").Length() > 0 {
+		return true
+	}
+
+	// Check for forms with "login" in action or id/class
+	loginForm := doc.Find("form[action*='login'], form[id*='login'], form[class*='login']")
+	if loginForm.Length() > 0 {
+		return true
+	}
+
+	// Check inputs with class/id containing 'password'
+	if doc.Find("input[id*='password'], input[class*='password']").Length() > 0 {
+		return true
+	}
+
+	return false
 }
